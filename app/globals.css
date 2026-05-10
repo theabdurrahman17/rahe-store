@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ivory: #f8f6f1;
+  --sand: #e8dfd1;
+  --beige: #dccdb6;
+  --taupe: #8a7e72;
+  --charcoal: #2e2a26;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--ivory);
+  color: var(--charcoal);
+  font-family: Inter, system-ui, sans-serif;
+}
+
+::selection {
+  background: var(--charcoal);
+  color: var(--ivory);
+}
+
+@layer components {
+  .container-luxury {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-charcoal px-6 py-3 text-sm font-medium tracking-wide text-ivory transition hover:opacity-90;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-full border border-charcoal px-6 py-3 text-sm font-medium tracking-wide text-charcoal transition hover:bg-charcoal hover:text-ivory;
+  }
+
+  .section-title {
+    @apply font-serif text-3xl md:text-5xl font-semibold tracking-tight;
+  }
+
+  .section-subtitle {
+    @apply mt-3 max-w-2xl text-base md:text-lg text-taupe;
+  }
+
+  .card-luxury {
+    @apply rounded-3xl border border-black/5 bg-white shadow-luxury;
+  }
+}
