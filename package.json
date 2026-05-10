@@ -1,0 +1,1273 @@
+{
+  "name": "rahe-ecommerce",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RAHÉ - Comfort in Modesty | Modern Modest Wear",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "15.3.2",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "lucide-react": "^0.511.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.5",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.8.3"
+  }
+}
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["node_modules"]
+}import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  images: {
+    unoptimized: true
+  }
+};
+
+export default nextConfig;
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./data/**/*.{js,ts,jsx,tsx}"
+  ],
+  theme: {
+    extend: {
+      colors: {
+        ivory: "#F8F6F1",
+        sand: "#E8DFD1",
+        beige: "#DCCDB6",
+        taupe: "#8A7E72",
+        charcoal: "#2E2A26"
+      },
+      fontFamily: {
+        serif: ["Georgia", "Times New Roman", "serif"],
+        sans: ["Inter", "system-ui", "sans-serif"]
+      },
+      boxShadow: {
+        luxury: "0 20px 50px rgba(0,0,0,0.08)"
+      }
+    }
+  },
+  plugins: []
+};
+
+export default config;
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {}
+  }
+};
+
+name = "rahe-ecommerce"
+compatibility_date = "2026-05-10"
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ivory: #f8f6f1;
+  --sand: #e8dfd1;
+  --beige: #dccdb6;
+  --taupe: #8a7e72;
+  --charcoal: #2e2a26;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--ivory);
+  color: var(--charcoal);
+  font-family: Inter, system-ui, sans-serif;
+}
+
+::selection {
+  background: var(--charcoal);
+  color: var(--ivory);
+}
+
+@layer components {
+  .container-luxury {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-charcoal px-6 py-3 text-sm font-medium tracking-wide text-ivory transition hover:opacity-90;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-full border border-charcoal px-6 py-3 text-sm font-medium tracking-wide text-charcoal transition hover:bg-charcoal hover:text-ivory;
+  }
+
+  .section-title {
+    @apply font-serif text-3xl md:text-5xl font-semibold tracking-tight;
+  }
+
+  .section-subtitle {
+    @apply mt-3 max-w-2xl text-base md:text-lg text-taupe;
+  }
+
+  .card-luxury {
+    @apply rounded-3xl border border-black/5 bg-white shadow-luxury;
+  }
+}
+import type { Metadata } from "next";
+import "./globals.css";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+
+export const metadata: Metadata = {
+  title: {
+    default: "RAHÉ | Comfort in Modesty",
+    template: "%s | RAHÉ"
+  },
+  description:
+    "Modern modest wear including men's thobes, women's abayas, hijabs, and signature fragrances.",
+  keywords: [
+    "modest wear",
+    "thobes",
+    "abayas",
+    "hijabs",
+    "Islamic clothing",
+    "luxury modest fashion"
+  ]
+};
+
+export default function RootLayout({
+  children
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body className="min-h-screen bg-ivory text-charcoal antialiased">
+        <Header />
+        <main>{children}</main>
+        <Footer />
+      </body>
+    </html>
+  );
+}
+export type Product = {
+  id: number;
+  name: string;
+  slug: string;
+  category: string;
+  price: number;
+  image: string;
+  description: string;
+  featured?: boolean;
+  bestSeller?: boolean;
+};
+
+export const categories = [
+  {
+    name: "Men’s Thobes & Kurtas",
+    slug: "mens-thobes-kurtas",
+    description: "Tailored garments crafted for timeless elegance and daily comfort."
+  },
+  {
+    name: "Women’s Abayas",
+    slug: "womens-abayas",
+    description: "Graceful silhouettes designed with refined modesty."
+  },
+  {
+    name: "Hijabs",
+    slug: "hijabs",
+    description: "Soft premium fabrics in versatile shades for every occasion."
+  },
+  {
+    name: "Signature Fragrances",
+    slug: "signature-fragrances",
+    description: "Distinctive scents inspired by serenity and sophistication."
+  }
+];
+
+export const products: Product[] = [
+  {
+    id: 1,
+    name: "Noor Premium Thobe",
+    slug: "noor-premium-thobe",
+    category: "mens-thobes-kurtas",
+    price: 15990,
+    image: "/placeholder.txt",
+    description:
+      "A refined premium thobe crafted with breathable fabric and impeccable tailoring.",
+    featured: true,
+    bestSeller: true
+  },
+  {
+    id: 2,
+    name: "Safa Linen Kurta",
+    slug: "safa-linen-kurta",
+    category: "mens-thobes-kurtas",
+    price: 12990,
+    image: "/placeholder.txt",
+    description:
+      "Lightweight linen blend kurta designed for comfort and understated luxury.",
+    featured: true
+  },
+  {
+    id: 3,
+    name: "Layali Signature Abaya",
+    slug: "layali-signature-abaya",
+    category: "womens-abayas",
+    price: 18990,
+    image: "/placeholder.txt",
+    description:
+      "Flowing abaya with elegant drape and premium finishing details.",
+    featured: true,
+    bestSeller: true
+  },
+  {
+    id: 4,
+    name: "Silk Modal Hijab",
+    slug: "silk-modal-hijab",
+    category: "hijabs",
+    price: 4990,
+    image: "/placeholder.txt",
+    description:
+      "Ultra-soft modal hijab with graceful texture and effortless styling.",
+    featured: true
+  },
+  {
+    id: 5,
+    name: "Raha Oud",
+    slug: "raha-oud",
+    category: "signature-fragrances",
+    price: 8990,
+    image: "/placeholder.txt",
+    description:
+      "A warm and sophisticated fragrance with rich oud and amber accords.",
+    bestSeller: true
+  },
+  {
+    id: 6,
+    name: "Misk Serenity",
+    slug: "misk-serenity",
+    category: "signature-fragrances",
+    price: 7990,
+    image: "/placeholder.txt",
+    description:
+      "A clean musk fragrance inspired by tranquility and modern elegance.",
+    bestSeller: true
+  },
+  {
+    id: 7,
+    name: "Nura Everyday Abaya",
+    slug: "nura-everyday-abaya",
+    category: "womens-abayas",
+    price: 14990,
+    image: "/placeholder.txt",
+    description:
+      "An everyday abaya balancing practicality with elevated design."
+  },
+  {
+    id: 8,
+    name: "Essential Chiffon Hijab",
+    slug: "essential-chiffon-hijab",
+    category: "hijabs",
+    price: 3990,
+    image: "/placeholder.txt",
+    description:
+      "Lightweight chiffon hijab offering elegant movement and versatility."
+  }
+];
+
+export function getFeaturedProducts() {
+  return products.filter((product) => product.featured);
+}
+
+export function getBestSellers() {
+  return products.filter((product) => product.bestSeller);
+}
+
+export function getProductsByCategory(categorySlug: string) {
+  return products.filter((product) => product.category === categorySlug);
+}
+
+export function getProductBySlug(slug: string) {
+  return products.find((product) => product.slug === slug);
+}
+"use client";
+
+import Link from "next/link";
+import { Heart, Menu, Search, ShoppingBag, User, X } from "lucide-react";
+import { useState } from "react";
+
+const navigation = [
+  { name: "Home", href: "/" },
+  { name: "Men", href: "/collections/mens-thobes-kurtas" },
+  { name: "Women", href: "/collections/womens-abayas" },
+  { name: "Hijabs", href: "/collections/hijabs" },
+  { name: "Fragrances", href: "/collections/signature-fragrances" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" }
+];
+
+export default function Header() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-black/5 bg-ivory/95 backdrop-blur">
+      <div className="container-luxury">
+        <div className="flex h-20 items-center justify-between">
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="rounded-full p-2 hover:bg-black/5 md:hidden"
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+
+          {/* Logo */}
+          <Link href="/" className="text-center">
+            <div className="font-serif text-3xl font-semibold tracking-[0.25em]">
+              RAHÉ
+            </div>
+            <div className="text-xs tracking-[0.3em] text-taupe">راحة</div>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden absolute left-1/2 -translate-x-1/2 md:flex items-center gap-8">
+            {navigation.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-sm tracking-wide text-charcoal transition hover:text-taupe"
+              >
+                {item.name}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Icons */}
+          <div className="flex items-center gap-2">
+            <button className="rounded-full p-2 hover:bg-black/5" aria-label="Search">
+              <Search size={20} />
+            </button>
+            <button className="rounded-full p-2 hover:bg-black/5" aria-label="Wishlist">
+              <Heart size={20} />
+            </button>
+            <button className="rounded-full p-2 hover:bg-black/5" aria-label="Account">
+              <User size={20} />
+            </button>
+            <Link
+              href="/cart"
+              className="rounded-full p-2 hover:bg-black/5"
+              aria-label="Cart"
+            >
+              <ShoppingBag size={20} />
+            </Link>
+          </div>
+        </div>
+
+        {/* Mobile Navigation */}
+        {mobileOpen && (
+          <nav className="border-t border-black/5 py-4 md:hidden">
+            <div className="flex flex-col gap-4">
+              {navigation.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="text-sm tracking-wide text-charcoal"
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
+          </nav>
+        )}
+      </div>
+    </header>
+  );
+}
+import Link from "next/link";
+
+export default function Footer() {
+  return (
+    <footer className="mt-24 border-t border-black/5 bg-white">
+      <div className="container-luxury py-16">
+        <div className="grid gap-12 md:grid-cols-4">
+          {/* Brand */}
+          <div className="md:col-span-2">
+            <h2 className="font-serif text-3xl tracking-[0.2em]">RAHÉ</h2>
+            <p className="mt-2 text-sm tracking-[0.3em] text-taupe">راحة</p>
+            <p className="mt-4 max-w-md text-sm leading-7 text-taupe">
+              Comfort in Modesty. Modern modest wear crafted with elegance,
+              serenity, and timeless design.
+            </p>
+          </div>
+
+          {/* Shop */}
+          <div>
+            <h3 className="text-sm font-semibold uppercase tracking-[0.2em]">
+              Shop
+            </h3>
+            <ul className="mt-4 space-y-3 text-sm text-taupe">
+              <li>
+                <Link href="/collections/mens-thobes-kurtas">Men’s Thobes</Link>
+              </li>
+              <li>
+                <Link href="/collections/womens-abayas">Women’s Abayas</Link>
+              </li>
+              <li>
+                <Link href="/collections/hijabs">Hijabs</Link>
+              </li>
+              <li>
+                <Link href="/collections/signature-fragrances">Fragrances</Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Company */}
+          <div>
+            <h3 className="text-sm font-semibold uppercase tracking-[0.2em]">
+              Company
+            </h3>
+            <ul className="mt-4 space-y-3 text-sm text-taupe">
+              <li>
+                <Link href="/about">About</Link>
+              </li>
+              <li>
+                <Link href="/contact">Contact</Link>
+              </li>
+              <li>
+                <Link href="/privacy-policy">Privacy Policy</Link>
+              </li>
+              <li>
+                <Link href="/terms-and-conditions">Terms & Conditions</Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-12 border-t border-black/5 pt-8 text-sm text-taupe">
+          © {new Date().getFullYear()} RAHÉ. All rights reserved.
+        </div>
+      </div>
+    </footer>
+  );
+}
+import Link from "next/link";
+import { Heart } from "lucide-react";
+import { Product } from "@/data/products";
+
+type ProductCardProps = {
+  product: Product;
+};
+
+export default function ProductCard({ product }: ProductCardProps) {
+  return (
+    <div className="group card-luxury overflow-hidden">
+      <Link href={`/product/${product.slug}`}>
+        <div className="relative aspect-[4/5] bg-sand">
+          <button
+            className="absolute right-4 top-4 z-10 rounded-full bg-white/90 p-2 shadow"
+            aria-label="Add to wishlist"
+          >
+            <Heart size={18} />
+          </button>
+
+          <div className="flex h-full items-center justify-center p-8 text-center">
+            <div>
+              <p className="font-serif text-2xl text-charcoal">
+                {product.name}
+              </p>
+              <p className="mt-2 text-sm uppercase tracking-[0.3em] text-taupe">
+                RAHÉ
+              </p>
+            </div>
+          </div>
+        </div>
+      </Link>
+
+      <div className="p-6">
+        <div className="mb-2 text-xs uppercase tracking-[0.25em] text-taupe">
+          {product.category.replace(/-/g, " ")}
+        </div>
+
+        <Link href={`/product/${product.slug}`}>
+          <h3 className="font-serif text-xl transition group-hover:text-taupe">
+            {product.name}
+          </h3>
+        </Link>
+
+        <p className="mt-2 line-clamp-2 text-sm leading-6 text-taupe">
+          {product.description}
+        </p>
+
+        <div className="mt-4 flex items-center justify-between">
+          <span className="text-lg font-medium">
+            LKR {product.price.toLocaleString()}
+          </span>
+
+          <Link href={`/product/${product.slug}`} className="btn-secondary text-xs">
+            View
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+import Link from "next/link";
+import ProductCard from "@/components/ProductCard";
+import {
+  categories,
+  getBestSellers,
+  getFeaturedProducts
+} from "@/data/products";
+
+export default function HomePage() {
+  const featuredProducts = getFeaturedProducts();
+  const bestSellers = getBestSellers();
+
+  return (
+    <div>
+      {/* Hero Section */}
+      <section className="relative overflow-hidden">
+        <div className="container-luxury py-20 md:py-32">
+          <div className="mx-auto max-w-4xl text-center">
+            <p className="mb-4 text-sm uppercase tracking-[0.35em] text-taupe">
+              Modern Modest Wear
+            </p>
+
+            <h1 className="font-serif text-5xl font-semibold leading-tight md:text-7xl">
+              Comfort in
+              <br />
+              Modesty
+            </h1>
+
+            <p className="mx-auto mt-8 max-w-2xl text-lg leading-8 text-taupe">
+              Premium thobes, abayas, hijabs, and signature fragrances crafted
+              with elegance, serenity, and timeless sophistication.
+            </p>
+
+            <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
+              <Link href="/collections/mens-thobes-kurtas" className="btn-primary">
+                Shop Collection
+              </Link>
+              <Link href="/about" className="btn-secondary">
+                Our Story
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Collections */}
+      <section className="py-24">
+        <div className="container-luxury">
+          <div className="text-center">
+            <h2 className="section-title">Featured Collections</h2>
+            <p className="section-subtitle mx-auto">
+              Discover thoughtfully curated categories designed for modern
+              modest living.
+            </p>
+          </div>
+
+          <div className="mt-16 grid gap-8 md:grid-cols-2 xl:grid-cols-4">
+            {categories.map((category) => (
+              <Link
+                key={category.slug}
+                href={`/collections/${category.slug}`}
+                className="card-luxury block overflow-hidden p-8 transition hover:-translate-y-1"
+              >
+                <div className="aspect-[4/5] rounded-3xl bg-sand p-8">
+                  <div className="flex h-full flex-col justify-end">
+                    <h3 className="font-serif text-3xl leading-tight">
+                      {category.name}
+                    </h3>
+                    <p className="mt-4 text-sm leading-7 text-taupe">
+                      {category.description}
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Best Sellers */}
+      <section className="py-24 bg-white">
+        <div className="container-luxury">
+          <div className="text-center">
+            <h2 className="section-title">Best Sellers</h2>
+            <p className="section-subtitle mx-auto">
+              Our most loved pieces chosen for their quality and timeless appeal.
+            </p>
+          </div>
+
+          <div className="mt-16 grid gap-8 md:grid-cols-2 xl:grid-cols-4">
+            {bestSellers.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Brand Story */}
+      <section className="py-24">
+        <div className="container-luxury">
+          <div className="card-luxury p-10 md:p-16">
+            <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+              <div className="aspect-square rounded-3xl bg-sand" />
+
+              <div>
+                <p className="text-sm uppercase tracking-[0.35em] text-taupe">
+                  Our Story
+                </p>
+
+                <h2 className="mt-4 section-title">
+                  Crafted for Serenity and Elegance
+                </h2>
+
+                <p className="mt-6 leading-8 text-taupe">
+                  RAHÉ (راحة) means comfort and tranquility. Our collections are
+                  inspired by the beauty of modesty and designed for individuals
+                  who value quality, dignity, and timeless style.
+                </p>
+
+                <p className="mt-4 leading-8 text-taupe">
+                  Every piece is created to bring confidence and ease to your
+                  everyday life.
+                </p>
+
+                <Link href="/about" className="btn-primary mt-8">
+                  Learn More
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Elements */}
+      <section className="py-24 bg-white">
+        <div className="container-luxury">
+          <div className="grid gap-8 md:grid-cols-3">
+            {[
+              {
+                title: "Premium Craftsmanship",
+                description:
+                  "Carefully selected fabrics and refined tailoring."
+              },
+              {
+                title: "Worldwide Delivery",
+                description:
+                  "Reliable shipping with secure packaging and tracking."
+              },
+              {
+                title: "Secure Checkout",
+                description:
+                  "Protected payments with PayHere integration readiness."
+              }
+            ].map((item) => (
+              <div key={item.title} className="card-luxury p-8 text-center">
+                <h3 className="font-serif text-2xl">{item.title}</h3>
+                <p className="mt-4 text-sm leading-7 text-taupe">
+                  {item.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-24">
+        <div className="container-luxury">
+          <div className="text-center">
+            <h2 className="section-title">What Our Customers Say</h2>
+          </div>
+
+          <div className="mt-16 grid gap-8 md:grid-cols-3">
+            {[
+              {
+                quote:
+                  "Exceptional quality and a truly elegant shopping experience.",
+                author: "Amina"
+              },
+              {
+                quote:
+                  "The thobes are beautifully tailored and incredibly comfortable.",
+                author: "Yusuf"
+              },
+              {
+                quote:
+                  "Luxury modest wear that feels both timeless and modern.",
+                author: "Maryam"
+              }
+            ].map((testimonial) => (
+              <div key={testimonial.author} className="card-luxury p-8">
+                <p className="leading-8 text-taupe">
+                  “{testimonial.quote}”
+                </p>
+                <p className="mt-6 font-medium">{testimonial.author}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Newsletter */}
+      <section className="py-24 bg-charcoal text-ivory">
+        <div className="container-luxury text-center">
+          <h2 className="font-serif text-4xl md:text-5xl">
+            Join the RAHÉ Journal
+          </h2>
+
+          <p className="mx-auto mt-6 max-w-2xl leading-8 text-white/75">
+            Receive updates on new collections, exclusive launches, and refined
+            inspirations for modern modest living.
+          </p>
+
+          <form className="mx-auto mt-10 flex max-w-xl flex-col gap-4 sm:flex-row">
+            <input
+              type="email"
+              placeholder="Your email address"
+              className="flex-1 rounded-full px-6 py-4 text-charcoal outline-none"
+            />
+            <button type="submit" className="rounded-full bg-white px-8 py-4 text-charcoal font-medium">
+              Subscribe
+            </button>
+          </form>
+        </div>
+      </section>
+    </div>
+  );
+}
+import { notFound } from "next/navigation";
+import ProductCard from "@/components/ProductCard";
+import {
+  categories,
+  getProductsByCategory
+} from "@/data/products";
+
+type CollectionPageProps = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
+
+export default async function CollectionPage({
+  params
+}: CollectionPageProps) {
+  const { slug } = await params;
+
+  const category = categories.find((item) => item.slug === slug);
+
+  if (!category) {
+    notFound();
+  }
+
+  const products = getProductsByCategory(slug);
+
+  return (
+    <div className="container-luxury py-16 md:py-24">
+      {/* Hero */}
+      <div className="text-center">
+        <p className="text-sm uppercase tracking-[0.35em] text-taupe">
+          Collection
+        </p>
+
+        <h1 className="mt-4 font-serif text-4xl font-semibold md:text-6xl">
+          {category.name}
+        </h1>
+
+        <p className="mx-auto mt-6 max-w-2xl leading-8 text-taupe">
+          {category.description}
+        </p>
+      </div>
+
+      {/* Product Grid */}
+      <div className="mt-16 grid gap-8 md:grid-cols-2 xl:grid-cols-4">
+        {products.length > 0 ? (
+          products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+            />
+          ))
+        ) : (
+          <div className="col-span-full text-center text-taupe">
+            No products found in this collection.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { Heart, Minus, Plus, ShieldCheck, Truck } from "lucide-react";
+import { getProductBySlug } from "@/data/products";
+
+type ProductPageProps = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
+
+export default async function ProductPage({
+  params
+}: ProductPageProps) {
+  const { slug } = await params;
+  const product = getProductBySlug(slug);
+
+  if (!product) {
+    notFound();
+  }
+
+  return (
+    <div className="container-luxury py-16 md:py-24">
+      {/* Breadcrumb */}
+      <nav className="mb-10 text-sm text-taupe">
+        <Link href="/">Home</Link>
+        <span className="mx-2">/</span>
+        <Link href={`/collections/${product.category}`}>Collection</Link>
+        <span className="mx-2">/</span>
+        <span className="text-charcoal">{product.name}</span>
+      </nav>
+
+      {/* Product Layout */}
+      <div className="grid gap-12 lg:grid-cols-2">
+        {/* Product Visual */}
+        <div className="card-luxury overflow-hidden">
+          <div className="aspect-[4/5] bg-sand p-10">
+            <div className="flex h-full items-center justify-center text-center">
+              <div>
+                <p className="font-serif text-4xl md:text-5xl">
+                  {product.name}
+                </p>
+                <p className="mt-4 uppercase tracking-[0.35em] text-taupe text-sm">
+                  RAHÉ
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Product Details */}
+        <div>
+          <div className="text-sm uppercase tracking-[0.35em] text-taupe">
+            {product.category.replace(/-/g, " ")}
+          </div>
+
+          <h1 className="mt-4 font-serif text-4xl md:text-5xl font-semibold">
+            {product.name}
+          </h1>
+
+          <p className="mt-6 text-3xl font-medium">
+            LKR {product.price.toLocaleString()}
+          </p>
+
+          <p className="mt-6 leading-8 text-taupe">
+            {product.description}
+          </p>
+
+          {/* Quantity Selector */}
+          <div className="mt-8">
+            <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em]">
+              Quantity
+            </p>
+
+            <div className="inline-flex items-center rounded-full border border-black/10 bg-white">
+              <button className="p-4" aria-label="Decrease quantity">
+                <Minus size={18} />
+              </button>
+
+              <span className="min-w-12 text-center">1</span>
+
+              <button className="p-4" aria-label="Increase quantity">
+                <Plus size={18} />
+              </button>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+            <button className="btn-primary flex-1">
+              Add to Cart
+            </button>
+
+            <button
+              className="btn-secondary px-5"
+              aria-label="Add to wishlist"
+            >
+              <Heart size={18} />
+            </button>
+          </div>
+
+          {/* Trust Features */}
+          <div className="mt-10 space-y-4">
+            <div className="flex items-center gap-3 text-sm text-taupe">
+              <Truck size={18} />
+              Worldwide shipping with tracking.
+            </div>
+
+            <div className="flex items-center gap-3 text-sm text-taupe">
+              <ShieldCheck size={18} />
+              Secure checkout ready for PayHere integration.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+import Link from "next/link";
+import { ShoppingBag } from "lucide-react";
+
+export default function CartPage() {
+  const cartItems = [
+    {
+      id: 1,
+      name: "Noor Premium Thobe",
+      price: 15990,
+      quantity: 1
+    },
+    {
+      id: 4,
+      name: "Silk Modal Hijab",
+      price: 4990,
+      quantity: 2
+    }
+  ];
+
+  const subtotal = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+
+  const shipping = 1500;
+  const total = subtotal + shipping;
+
+  return (
+    <div className="container-luxury py-16 md:py-24">
+      <div className="mb-12 text-center">
+        <p className="text-sm uppercase tracking-[0.35em] text-taupe">
+          Shopping Cart
+        </p>
+        <h1 className="mt-4 font-serif text-4xl font-semibold md:text-6xl">
+          Your Cart
+        </h1>
+      </div>
+
+      {cartItems.length === 0 ? (
+        <div className="card-luxury p-16 text-center">
+          <ShoppingBag className="mx-auto mb-6" size={48} />
+          <h2 className="font-serif text-3xl">Your cart is empty</h2>
+          <p className="mt-4 text-taupe">
+            Discover timeless pieces crafted for modern modest living.
+          </p>
+          <Link
+            href="/"
+            className="btn-primary mt-8"
+          >
+            Continue Shopping
+          </Link>
+        </div>
+      ) : (
+        <div className="grid gap-12 lg:grid-cols-3">
+          {/* Cart Items */}
+          <div className="space-y-6 lg:col-span-2">
+            {cartItems.map((item) => (
+              <div
+                key={item.id}
+                className="card-luxury p-6"
+              >
+                <div className="flex items-center gap-6">
+                  <div className="h-24 w-20 rounded-2xl bg-sand" />
+
+                  <div className="flex-1">
+                    <h3 className="font-serif text-2xl">
+                      {item.name}
+                    </h3>
+                    <p className="mt-2 text-sm text-taupe">
+                      Quantity: {item.quantity}
+                    </p>
+                  </div>
+
+                  <div className="text-right font-medium">
+                    LKR {(item.price * item.quantity).toLocaleString()}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Summary */}
+          <div className="card-luxury h-fit p-8">
+            <h2 className="font-serif text-3xl">
+              Order Summary
+            </h2>
+
+            <div className="mt-8 space-y-4 text-sm">
+              <div className="flex justify-between">
+                <span className="text-taupe">Subtotal</span>
+                <span>LKR {subtotal.toLocaleString()}</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="text-taupe">Shipping</span>
+                <span>LKR {shipping.toLocaleString()}</span>
+              </div>
+
+              <div className="border-t border-black/5 pt-4 flex justify-between text-lg font-medium">
+                <span>Total</span>
+                <span>LKR {total.toLocaleString()}</span>
+              </div>
+            </div>
+
+            <button className="btn-primary mt-8 w-full">
+              Proceed to Checkout
+            </button>
+
+            <p className="mt-4 text-center text-xs text-taupe">
+              Secure checkout ready for PayHere integration.
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+import Link from "next/link";
+
+export default function AboutPage() {
+  return (
+    <div className="container-luxury py-16 md:py-24">
+      {/* Hero */}
+      <div className="mx-auto max-w-4xl text-center">
+        <p className="text-sm uppercase tracking-[0.35em] text-taupe">
+          About RAHÉ
+        </p>
+
+        <h1 className="mt-4 font-serif text-4xl font-semibold md:text-6xl">
+          Comfort in Modesty
+        </h1>
+
+        <p className="mt-8 text-lg leading-8 text-taupe">
+          RAHÉ (راحة) is inspired by the concept of tranquility, dignity, and
+          timeless elegance. We create premium modest wear for individuals who
+          value quality craftsmanship and sophisticated simplicity.
+        </p>
+      </div>
+
+      {/* Story */}
+      <div className="mx-auto mt-16 max-w-4xl">
+        <div className="card-luxury p-10 md:p-14">
+          <h2 className="font-serif text-3xl md:text-4xl">
+            Our Philosophy
+          </h2>
+
+          <p className="mt-6 leading-8 text-taupe">
+            Our mission is to blend tradition with modern design, offering
+            garments and fragrances that embody serenity and confidence.
+          </p>
+
+          <p className="mt-4 leading-8 text-taupe">
+            Each collection is thoughtfully curated to deliver comfort,
+            durability, and understated luxury.
+          </p>
+
+          <p className="mt-4 leading-8 text-taupe">
+            From tailored thobes and flowing abayas to soft hijabs and signature
+            fragrances, every detail is crafted to elevate everyday life.
+          </p>
+
+          <Link href="/" className="btn-primary mt-8">
+            Explore Collections
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+export default function ContactPage() {
+  return (
+    <div className="container-luxury py-16 md:py-24">
+      <div className="mx-auto max-w-3xl text-center">
+        <p className="text-sm uppercase tracking-[0.35em] text-taupe">
+          Contact
+        </p>
+
+        <h1 className="mt-4 font-serif text-4xl font-semibold md:text-6xl">
+          We’d Love to Hear From You
+        </h1>
+
+        <p className="mt-8 text-lg leading-8 text-taupe">
+          Reach out for product inquiries, sizing guidance, partnerships, or
+          customer support.
+        </p>
+      </div>
+
+      <div className="mx-auto mt-16 max-w-3xl">
+        <div className="card-luxury p-10 md:p-14">
+          <form className="space-y-6">
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                Full Name
+              </label>
+              <input
+                type="text"
+                className="w-full rounded-2xl border border-black/10 px-5 py-4 outline-none focus:border-charcoal"
+                placeholder="Your name"
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                Email Address
+              </label>
+              <input
+                type="email"
+                className="w-full rounded-2xl border border-black/10 px-5 py-4 outline-none focus:border-charcoal"
+                placeholder="you@example.com"
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                Message
+              </label>
+              <textarea
+                rows={6}
+                className="w-full rounded-2xl border border-black/10 px-5 py-4 outline-none focus:border-charcoal"
+                placeholder="How can we help?"
+              />
+            </div>
+
+            <button type="submit" className="btn-primary">
+              Send Message
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
+export default function PrivacyPolicyPage() {
+  return (
+    <div className="container-luxury py-16 md:py-24">
+      <div className="mx-auto max-w-4xl">
+        <p className="text-sm uppercase tracking-[0.35em] text-taupe">
+          Legal
+        </p>
+
+        <h1 className="mt-4 font-serif text-4xl font-semibold md:text-6xl">
+          Privacy Policy
+        </h1>
+
+        <div className="mt-10 card-luxury p-10 md:p-14 space-y-6 leading-8 text-taupe">
+          <p>
+            At RAHÉ, we respect your privacy and are committed to protecting
+            your personal information.
+          </p>
+
+          <p>
+            We collect only the information necessary to process orders,
+            communicate with customers, and improve our services.
+          </p>
+
+          <p>
+            Your information is never sold to third parties. Payment processing
+            is handled securely through trusted providers such as PayHere.
+          </p>
+
+          <p>
+            By using our website, you consent to this Privacy Policy.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+export default function TermsAndConditionsPage() {
+  return (
+    <div className="container-luxury py-16 md:py-24">
+      <div className="mx-auto max-w-4xl">
+        <p className="text-sm uppercase tracking-[0.35em] text-taupe">
+          Legal
+        </p>
+
+        <h1 className="mt-4 font-serif text-4xl font-semibold md:text-6xl">
+          Terms & Conditions
+        </h1>
+
+        <div className="mt-10 card-luxury p-10 md:p-14 space-y-6 leading-8 text-taupe">
+          <p>
+            By accessing and using this website, you agree to comply with these
+            terms and conditions.
+          </p>
+
+          <p>
+            Product availability, pricing, and descriptions may change without
+            prior notice.
+          </p>
+
+          <p>
+            Orders are subject to acceptance and payment verification.
+          </p>
+
+          <p>
+            RAHÉ reserves all intellectual property rights relating to website
+            content and branding.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
